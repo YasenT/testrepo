@@ -587,11 +587,11 @@ spec:
             echo "Listing files in /mnt/pulp-creds:"
             ls -la /mnt/pulp-creds
             
-            echo -e "\nContents of cert.pem:"
-            cat /mnt/pulp-creds/cert.pem
+            echo -e "\nContents of tls.crt:"
+            cat /mnt/pulp-creds/tls.crt
             
-            echo -e "\nContents of key.pem:"
-            cat /mnt/pulp-creds/key.pem
+            echo -e "\nContents of tls.key:"
+            cat /mnt/pulp-creds/tls.key
             
             echo -e "\nDirectory structure created successfully!"
         volumes:
