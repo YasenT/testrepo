@@ -597,7 +597,7 @@ spec:
         volumes:
         - name: pulp-creds
           secret:
-            secretName: pulp-access-secret
+            secretName: pulp-access
       when:
       - input: $(tasks.init.results.build)
         operator: in
