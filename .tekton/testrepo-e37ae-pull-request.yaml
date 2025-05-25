@@ -570,6 +570,62 @@ spec:
         operator: in
         values:
         - "true"
+    - name: use-pulp-request
+      params:
+      - name: image-url
+        value: $(tasks.build-image-index.results.IMAGE_URL)
+      runAfter:
+      - create-pulp-access-request
+      taskSpec:
+        steps:
+        - name: create-and-mount-secret
+          image: quay.io/openshift/origin-cli:latest
+          script: |
+            # Wait briefly for the PulpAccessRequest to be processed
+            echo "Waiting for PulpAccessRequest to be processed..."
+            sleep 5
+            
+            # Create a secret from the PulpAccessRequest
+            cat <<EOF > pulp-secret.yaml
+            apiVersion: v1
+            kind: Secret
+            metadata:
+              name: pulp-access-secret
+              namespace: user-ns2
+            type: Opaque
+            stringData:
+              cert.pem: "$(kubectl get pulpaccessrequests.konflux.io test-par -o jsonpath='{.spec.cert}')"
+              key.pem: "$(kubectl get pulpaccessrequests.konflux.io test-par -o jsonpath='{.spec.key}')"
+            EOF
+            
+            kubectl apply -f pulp-secret.yaml
+            echo "Secret 'pulp-access-secret' created successfully"
+            
+        - name: mount-and-display
+          image: registry.access.redhat.com/ubi8/ubi-minimal:latest
+          volumeMounts:
+          - name: pulp-creds
+            mountPath: /mnt/pulp-creds
+          script: |
+            echo "Listing files in /mnt/pulp-creds:"
+            ls -la /mnt/pulp-creds
+            
+            echo -e "\nContents of cert.pem:"
+            cat /mnt/pulp-creds/cert.pem
+            
+            echo -e "\nContents of key.pem:"
+            cat /mnt/pulp-creds/key.pem
+            
+            echo -e "\nDirectory structure created successfully!"
+        volumes:
+        - name: pulp-creds
+          secret:
+            secretName: pulp-access-secret
+      when:
+      - input: $(tasks.init.results.build)
+        operator: in
+        values:
+        - "true"
     - name: push-dockerfile
       params:
       - name: IMAGE
