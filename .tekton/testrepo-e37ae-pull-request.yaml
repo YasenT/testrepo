@@ -558,7 +558,6 @@ spec:
             kind: PulpAccessRequest
             metadata:
               name: test-par
-              namespace: default  # Or your namespace
             spec:
               cert: "dummy-cert"
               key: "dummy-key"
