@@ -26,7 +26,7 @@ spec:
   - name: dockerfile
     value: Dockerfile
   pipelineSpec:
-    description: Simple pipeline to test Pulp Access Controller and build container image
+    description: Simple pipeline to build container image
     params:
     - description: Source Repository URL
       name: git-url
@@ -66,9 +66,6 @@ spec:
         - name: kind
           value: task
         resolver: bundles
-      workspaces:
-      - name: dockerconfig
-        workspace: dockerconfig
     - name: build-container
       runAfter:
       - clone-repository
