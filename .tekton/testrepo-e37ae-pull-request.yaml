@@ -47,41 +47,7 @@ spec:
       name: image-expires-after
       type: string
     tasks:
-    - name: create-pulp-access-request
-      taskSpec:
-        steps:
-        - name: kubectl-apply
-          image: quay.io/openshift/origin-cli:latest
-          script: |
-            kubectl auth whoami
-    - name: use-pulp-secret
-      runAfter:
-      - create-pulp-access-request
-      taskSpec:
-        steps:
-        - name: mount-and-display
-          image: registry.access.redhat.com/ubi8/ubi-minimal:latest
-          volumeMounts:
-          - name: pulp-creds
-            mountPath: /mnt/pulp-creds
-          script: |
-            echo "Listing files in /mnt/pulp-creds:"
-            ls -la /mnt/pulp-creds
-            
-            echo -e "\nContents of tls.crt:"
-            cat /mnt/pulp-creds/tls.crt
-            
-            echo -e "\nContents of tls.key:"
-            cat /mnt/pulp-creds/tls.key
-            
-            echo -e "\nSecret mounted and accessed successfully!"
-        volumes:
-        - name: pulp-creds
-          secret:
-            secretName: pulp-access
     - name: clone-repository
-      runAfter:
-      - use-pulp-secret
       params:
       - name: url
         value: $(params.git-url)
