@@ -102,7 +102,7 @@ spec:
         resolver: bundles
       workspaces:
       - name: dockerconfig
-        workspace: dockerconfig
+        workspace: registry-auth
     - name: build-container
       runAfter:
       - clone-repository
@@ -130,11 +130,11 @@ spec:
         resolver: bundles
       workspaces:
       - name: dockerconfig
-        workspace: dockerconfig
+        workspace: registry-auth
     workspaces:
-    - name: dockerconfig
+    - name: registry-auth
       optional: false
   workspaces:
-  - name: dockerconfig
+  - name: registry-auth
     secret:
       secretName: ytrahnov-konfluxstag-pull-secret
