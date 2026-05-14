@@ -372,7 +372,7 @@ spec:
 
             echo "[INFO] Pulling image ${IMAGE_URL}@${IMAGE_DIGEST} ..."
             skopeo copy --src-tls-verify=false \
-                "docker://${IMAGE_URL}@${IMAGE_DIGEST}" \
+                "docker://${IMAGE_URL%:*}@${IMAGE_DIGEST}" \
                 "dir:${WORKDIR}/image"
 
             echo "[INFO] Extracting layers..."
